@@ -60,6 +60,16 @@ export default function Home() {
               description="Crie uma conexão mais próxima com seus apoiadores através de mensagens personalizadas."
             />
             <FeatureCard
+              icon={<Heart className="h-8 w-8 text-amber-600" />}
+              title="Conexão direta"
+              description="Crie uma conexão mais próxima com seus apoiadores através de mensagens personalizadas."
+            />
+            <FeatureCard
+              icon={<Heart className="h-8 w-8 text-amber-600" />}
+              title="Conexão direta"
+              description="Crie uma conexão mais próxima com seus apoiadores através de mensagens personalizadas."
+            />
+            <FeatureCard
               icon={<Shield className="h-8 w-8 text-amber-600" />}
               title="Pagamentos seguros"
               description="Transações protegidas e transferências automáticas para sua conta bancária."

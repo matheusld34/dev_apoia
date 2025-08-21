@@ -1,4 +1,26 @@
-export default function Me() {
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+
+
+
+export default async function Me() {
+    const session = await auth();
+
+    if (!session?.user) {
+        redirect("/")
+    }
+
+    const userData = {
+        id: session.user.id,
+        name: session.user.name,
+        username: session.user?.bio || null,
+        bio: session.user?.bio || null,
+        image: session.user?.image || null,
+    }
+
+
+
     return (
         <main className="w-full h-full flex gap-4 flex-col items-center p-4">
             <section

@@ -27,12 +27,12 @@ model User {
   // Optional for WebAuthn support
   Authenticator Authenticator[]
 
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  donations Donations[] @relation("UserDonations")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  donations Donation[] @relation("UserDonations")
 }
 
-model Donations {
+model Donation {
   id           String @id @default(cuid())
   amount       Int // Em centavos
   donorName    String // Nome do doador

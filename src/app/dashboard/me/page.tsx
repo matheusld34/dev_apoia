@@ -15,7 +15,7 @@ export default async function Me() {
     const userData = {
         id: session.user.id,
         name: session.user.name,
-        username: session.user?.bio || null,
+        username: session.user?.username || null,
         bio: session.user?.bio || null,
         image: session.user?.image || null,
     }
@@ -27,7 +27,7 @@ export default async function Me() {
             <section
                 className="w-full flex lg:flex-row flex-col lg:items-center mx-auto bg-zinc-900 rounded-md p-4 gap-2"
             >
-                <UrlPreview />
+                <UrlPreview username={userData.username} />
             </section>
 
 

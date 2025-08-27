@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Name } from "./name"
+import { Description } from "./description";
 
 interface CardProfileProps {
     user: {
@@ -30,6 +31,7 @@ export function CardProfile({ user }: CardProfileProps) {
             </div>
             <div>
                 <Name initialName={user.name ?? "Digite seu nome..."} />
+                <Description initialDescription={user.bio ?? "Escreva uma breve descrição sobre você..."} />
             </div>
         </section>
     )

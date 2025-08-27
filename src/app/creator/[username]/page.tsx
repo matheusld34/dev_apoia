@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { getInfoUser } from "./_data-access/get-info-user";
+import { notFound } from "next/navigation";
 
 export default async function Apoia({
     params,
@@ -8,8 +10,10 @@ export default async function Apoia({
     const { username } = await params;
 
 
-    console.log(username);
-
+    const user = await getInfoUser({ username });
+    if (!user) {
+        notFound()
+    }
     return (
         <div className=" min-h-[calc(100vh-64px)]">
             <div className="w-full h-64 relative bg-black">

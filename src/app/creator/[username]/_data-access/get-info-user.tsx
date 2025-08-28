@@ -29,24 +29,9 @@ export async function getInfoUser(data: CreateUserNameSchema) {
 
             }
         })
-
-        if (!user) {
-            return {
-                data: null,
-                error: "Usuário não encontrado"
-            }
-        }
-
-        return {
-            data: user,
-            error: null
-        }
+        return user;
 
     } catch (err) {
-        console.log(err);
-        return {
-            data: null,
-            error: "Erro ao buscar o usuário"
-        }
+        return null;
     }
 }

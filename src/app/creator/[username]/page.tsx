@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getInfoUser } from "./_data-access/get-info-user";
 import { notFound } from "next/navigation";
+import { FormDonate } from "./_components/form";
 
 export default async function Apoia({
     params,
@@ -18,7 +19,7 @@ export default async function Apoia({
         <div className=" min-h-[calc(100vh-64px)]">
             <div className="w-full h-64 relative bg-black">
                 <Image
-                    src={"https://github.com/devfraga.png"}
+                    src={user.image ?? "https://github.com/devfraga.png"}
                     alt="Banner"
                     fill
                     className="object-cover opacity-50"
@@ -38,7 +39,7 @@ export default async function Apoia({
                         quality={100}
                     />
                     <h1 className=" font-bold text-xl md:text-2xl mt-20 mb-4">
-                        Fulano Dev
+                        {user.name ?? "sem nome"}
                     </h1>
                 </div>
             </section>
@@ -46,10 +47,10 @@ export default async function Apoia({
             <div className="grid grid-cols-1 md:grid-cols-2 w-full mx-auto gap-4 max-w-5xl">
                 <section className="hidden md:flex flex-col bg-gray-50 p-5 rounded-md h-fit mx-2">
                     <p className="font-semibold text-lg">
-                        Sobre Fulano Dev
+                        Sobre {user.name ?? ""}
                     </p>
                     <p className="text-gray-500 mt-2">
-                        Descrição generica sobre o fulano dev
+                        {user.bio ?? "Sem biografia"}
                     </p>
                 </section>
 
@@ -57,8 +58,10 @@ export default async function Apoia({
                     className="bg-gray-50 rounded-md p-5 h-fit mx-2"
                 >
                     <h3 className="font-semibold text-lg">
-                        Apoie o Matheus Fraga:
+                        {user.name ? `Apoiar ${user.name}` : "Apoiar criador"}
                     </h3>
+
+                    <FormDonate slug={user.username!} creatorId={user.id} />
 
 
                 </section>

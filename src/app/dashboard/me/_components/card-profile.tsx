@@ -19,7 +19,7 @@ export function CardProfile({ user }: CardProfileProps) {
         <section className="w-full flex flex-col items-center mx-auto px-4">
             <div className="">
                 <Image
-                    src={user.image ?? "/assets/default-profile.png"}
+                    src={user.image ?? "https://github.com/devfraga.png"}
                     alt="foto de perfil"
                     width={96}
                     height={96}

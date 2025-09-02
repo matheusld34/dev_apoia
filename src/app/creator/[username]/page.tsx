@@ -3,6 +3,7 @@ import { getInfoUser } from "./_data-access/get-info-user";
 import { notFound } from "next/navigation";
 import { FormDonate } from "./_components/form";
 
+
 export default async function Apoia({
     params,
 }: {
@@ -15,6 +16,8 @@ export default async function Apoia({
     if (!user) {
         notFound()
     }
+
+
     return (
         <div className=" min-h-[calc(100vh-64px)]">
             <div className="w-full h-64 relative bg-black">
@@ -31,7 +34,7 @@ export default async function Apoia({
             <section className="flex flex-col w-full items-center justify-center mx-auto max-w-7xl p-4 relative">
                 <div className="flex flex-col items-center">
                     <Image
-                        src={"https://github.com/devfraga.png"}
+                        src={user.image ?? "https://github.com/devfraga.png"}
                         className="w-36 h-36 rounded-xl bg-gray-50 hover:shadow-lg duration-300 select-none text-zinc-900 text-3xl flex items-center justify-center object-cover absolute -top-16 border-4 border-white"
                         alt="Matheus Fraga"
                         width={96}
@@ -45,7 +48,7 @@ export default async function Apoia({
             </section>
 
             <div className="grid grid-cols-1 md:grid-cols-2 w-full mx-auto gap-4 max-w-5xl">
-                <section className="hidden md:flex flex-col bg-gray-50 p-5 rounded-md h-fit mx-2">
+                <section className="flex flex-col bg-gray-50 p-5 rounded-md h-fit mx-2">
                     <p className="font-semibold text-lg">
                         Sobre {user.name ?? ""}
                     </p>
@@ -61,9 +64,8 @@ export default async function Apoia({
                         {user.name ? `Apoiar ${user.name}` : "Apoiar criador"}
                     </h3>
 
-                    <FormDonate slug={user.username!} creatorId={user.id} />
 
-
+                    <FormDonate slug={user.username!} creatorId={user.connectedStripeAccountId ?? ""} />
                 </section>
             </div>
         </div>

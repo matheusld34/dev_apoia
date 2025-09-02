@@ -3,6 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function CreateAccountButton() {
     const [loading, setLoading] = useState(false);
@@ -20,12 +21,13 @@ export function CreateAccountButton() {
 
             const data = await response.json();
 
-            if (data.url) {
-                window.location.href = data.url;
-            } else {
+            if (!response.ok) {
+                toast.error(data.message || "Falha ao criar conta de pagamento");
                 setLoading(false);
-                alert("Falha ao criar conta de pagamento");
+                return;
             }
+            window.location.href = data.url;
+
         } catch (err) {
             setLoading(false);
             alert("Falha ao criar conta de pagamento");

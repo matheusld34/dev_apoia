@@ -1,9 +1,8 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { error } from "console";
 import { z } from "zod"
-import { da } from "zod/v4/locales";
+import { stripe } from "@/lib/stripe"
 
 const createUserNameSchema = z.object({
     slug: z.string().min(1, "O slug é obrigatório"),
@@ -25,12 +24,73 @@ export async function createPayment(data: CreatePaumentSchema) {
         }
     }
 
+    if (!data.creatorId) {
+        return {
+            data: null,
+            error: "Creator não encontrado"
+        }
+    }
+
     try {
-        const creator = await prisma.user.findUnique({
+        const creator = await prisma.user.findFirst({
             where: {
-                id: data.creatorId
+                connectedStripeAccountId: data.creatorId
             },
         })
+        if (!creator) {
+            return {
+                data: null,
+                error: "Falha ao criar pagamento, tente novamente mais tarde"
+            }
+        }
+        //Calcular taxa do serviço
+
+        const applicationFeeAmount = Math.round(data.price * 0.10)
+
+        const donate = await prisma.donation.create({
+            data: {
+                donorName: data.name,
+                donorMessage: data.message,
+                userdId: creator.id,
+                status: "PENDING",
+                amount: (data.price - applicationFeeAmount)
+            }
+        })
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'payment',
+            success_url: `${process.env.HOST_URL}/creator/${data.slug}`,
+            cancel_url: `${process.env.HOST_URL}/creator/${data.slug}`,
+            line_items: [
+                {
+                    price_data: {
+                        currency: 'brl',
+                        product_data: {
+                            name: `Apoio para ${creator.name}`,
+                        },
+                        unit_amount: data.price * 100,
+                    },
+                    quantity: 1,
+                },
+            ],
+            payment_intent_data: {
+                application_fee_amount: applicationFeeAmount,
+                transfer_data: {
+                    destination: creator.connectedStripeAccountId as string,
+                },
+                metadata: {
+                    donateName: data.name,
+                    donateMessage: data.message,
+                    donateId: donate.id
+                }
+            },
+        })
+
+        return {
+            data: JSON.stringify(session),
+            error: null
+        }
 
     } catch (err) {
         return {

@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from "react"
 
 import { z } from "zod"
 import { useForm } from "react-hook-form"
@@ -12,6 +13,8 @@ import { RadioGroup } from "@radix-ui/react-radio-group"
 import { RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { createPayment } from "../actions/create-payment"
+import { toast } from "sonner"
+import { getStripeJs } from "@/lib/stripe-js"
 
 
 const formSchema = z.object({
@@ -49,13 +52,21 @@ export function FormDonate({ slug, creatorId }: FormDonateProps) {
         const checkout = await createPayment({
             name: data.name,
             message: data.message,
-            creatorId: "",
+            creatorId: creatorId,
             price: priceInCents,
-            slug: "",
-
+            slug: slug
         })
-        console.log(checkout);
+        if (checkout.error) {
+            toast.error(checkout.error)
+            return;
+        }
+        if (checkout.data) {
+            const data = JSON.parse(checkout.data)
+            const stripe = await getStripeJs()
+            await stripe?.redirectToCheckout({ sessionId: data.id as string })
+        }
     }
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 mt-5">
@@ -126,8 +137,10 @@ export function FormDonate({ slug, creatorId }: FormDonateProps) {
                 />
 
 
-                <Button type="submit">Fazer doação</Button>
+                <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "carregando" : "Doar"}</Button>
             </form>
         </Form >
     )
 }
+
+

@@ -26,7 +26,7 @@ export async function getInfoUser(data: CreateUserNameSchema) {
                 username: true,
                 bio: true,
                 image: true,
-
+                connectedStripeAccountId: true,
             }
         })
         return user;

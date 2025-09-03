@@ -19,14 +19,12 @@ export async function createPayment(data: CreatePaumentSchema) {
 
     if (!schema.success) {
         return {
-            data: null,
             error: schema.error.issues[0].message
         }
     }
 
     if (!data.creatorId) {
         return {
-            data: null,
             error: "Creator não encontrado"
         }
     }
@@ -39,13 +37,12 @@ export async function createPayment(data: CreatePaumentSchema) {
         })
         if (!creator) {
             return {
-                data: null,
                 error: "Falha ao criar pagamento, tente novamente mais tarde"
             }
         }
         //Calcular taxa do serviço
 
-        const applicationFeeAmount = Math.round(data.price * 0.10)
+        const applicationFeeAmount = Math.floor(data.price * 0.10)
 
         const donate = await prisma.donation.create({
             data: {
@@ -88,13 +85,11 @@ export async function createPayment(data: CreatePaumentSchema) {
         })
 
         return {
-            data: JSON.stringify(session),
-            error: null
+            sessionId: session.id,
         }
 
     } catch (err) {
         return {
-            data: null,
             error: "Erro ao criar pagamento"
         }
     }

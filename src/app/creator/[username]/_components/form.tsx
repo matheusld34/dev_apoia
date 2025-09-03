@@ -56,15 +56,21 @@ export function FormDonate({ slug, creatorId }: FormDonateProps) {
             price: priceInCents,
             slug: slug
         })
+
+    }
+
+    async function handlePaymentResponse(checkout: { sessionId?: string, error?: string }) {
         if (checkout.error) {
             toast.error(checkout.error)
             return;
         }
-        if (checkout.data) {
-            const data = JSON.parse(checkout.data)
-            const stripe = await getStripeJs()
-            await stripe?.redirectToCheckout({ sessionId: data.id as string })
+        if (!checkout.sessionId) {
+            toast.error("Erro ao processar pagamento, tente novamente mais tarde")
+            return;
         }
+        const stripe = await getStripeJs()
+        await stripe?.redirectToCheckout({ sessionId: checkout.sessionId })
+
     }
 
     return (

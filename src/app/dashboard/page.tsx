@@ -34,11 +34,14 @@ export default async function Dashboard() {
                 <CreateAccountButton />
             )}
 
-            <Stats />
+            <Stats userId={session.user.id} stripeAccountId={session.user.connectedStripeAccountId ?? ""} />
 
 
             <h2 className="text-2xl font-semibold mb-2">Últimas doações</h2>
-            <DonationTable />
+            {session.user.connectedStripeAccountId && (
+                <DonationTable />
+            )}
+
         </div>
     );
 }

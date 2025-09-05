@@ -1,8 +1,11 @@
 
 import { Users, DollarSign, Wallet } from "lucide-react";
 import { StatCard } from "./stats-card";
+import { getStats } from "../_data_access/get-stats-creator";
 
-export async function Stats() {
+export async function Stats({ userId, stripeAccountId }: { userId: string, stripeAccountId: string }) {
+
+    const data = await getStats(userId, stripeAccountId);
 
     return (
         <div className="grid gap-6 grid-cols-1 md:grid-cols-3 mb-6">

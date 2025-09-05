@@ -57,6 +57,8 @@ export function FormDonate({ slug, creatorId }: FormDonateProps) {
             slug: slug
         })
 
+        await handlePaymentResponse(checkout)
+
     }
 
     async function handlePaymentResponse(checkout: { sessionId?: string, error?: string }) {
@@ -68,7 +70,11 @@ export function FormDonate({ slug, creatorId }: FormDonateProps) {
             toast.error("Erro ao processar pagamento, tente novamente mais tarde")
             return;
         }
-        const stripe = await getStripeJs()
+        const stripe = await getStripeJs();
+        if (!stripe) {
+            toast.error("Erro ao processar pagamento, tente novamente mais tarde")
+            return;
+        }
         await stripe?.redirectToCheckout({ sessionId: checkout.sessionId })
 
     }

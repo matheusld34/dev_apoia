@@ -3,6 +3,7 @@ import { getInfoUser } from "./_data-access/get-info-user";
 import { notFound } from "next/navigation";
 import { FormDonate } from "./_components/form";
 import { CoverSection } from "./_components/cover-section";
+import { AboutSession } from "./_components/about-section";
 
 
 export default async function Apoia({
@@ -26,8 +27,18 @@ export default async function Apoia({
                 profileImage={user?.image ?? ""}
                 name={user?.name ?? "Sem nome"}
             />
+            <main className="container mx-auto max-w-6xl sm:p-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 -mt-8 md:-mt-16 relative z-10">
+                    <div className="order-2 lg:order-1">
+                        <AboutSession name={user?.name ?? "sem nome"} description={user?.bio ?? ""} />
+                    </div>
+                    <div className="order-1 lg:order-2">
+                        <FormDonate slug={user.username!} creatorId={user.connectedStripeAccountId ?? ""} />
+                    </div>
+                </div>
+
+            </main>
         </div>
     )
 }
 
-//<FormDonate slug={user.username!} creatorId={user.connectedStripeAccountId ?? ""} />
